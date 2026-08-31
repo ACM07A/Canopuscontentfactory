@@ -19,6 +19,7 @@ Each task small, verifiable, safe. Status: TODO · IN_PROGRESS · BLOCKED · PAS
 | T112 | PASS | Unified refinement release: merge concierge, red-team safety suite, YC application/context, corrected economics and positioning into the Hostinger-ready app | server/concierge_bot.mjs, tests/concierge-redteam.test.mjs, outputs/07_YC_APPLICATION_ANSWERS.md, data-core/unit_economics.mjs | 33/33 tests; concierge hermetic smoke; desktop/mobile browser QA | Med |
 | T113 | PASS | Hostinger runtime compatibility: production defaults to port 3000 and binds on all interfaces without overriding an injected `PORT` | server/server.mjs, scripts/healthcheck.mjs, docs/HOSTINGER_DEPLOYMENT_CHECKLIST.md | Direct entry-file boot with `NODE_ENV=production`, no `PORT`; `/api/health` returns ready on 3000 | Low |
 | T114 | PASS | Hostinger seed-runtime compatibility: nested demo seed steps use the active Node 24 executable and expose fatal child output | data-core/demo_seed.mjs, tests/integration.test.mjs | Seed succeeds with `node` removed from `PATH`; 33/33 tests and hermetic smoke pass | Low |
+| T115 | PASS | Canopus resource acquisition layer: content pack imported, homepage/resource directories, six flagship guides plus a fully rendered 45-page customer-facing wave, sitemap and minimized lead capture | server/resource_pages.mjs, server/md.mjs, server/server.mjs, frontend/src/components/ResourceEngine.tsx, frontend/src/content/resourceArticles.ts, docs/content-engine, content/treatments | `npm run build:frontend`, `npm run typecheck`, `npm test`, `node scripts/audit-resource-wave.mjs`; 45/45 wave routes return 200, meet type-specific depth floors, are indexable, and contain no checked scaffold/internal-nav leaks | Med |
 | T001 | PASS | Stand up data core + market-config schema (SQLite, node:sqlite) | data-core/ | seed loads 12 markets/6 cats/12 partners; 5 query reports run | Low |
 | T013 | PASS | Reconciled portfolio: accept model rank, Cardiac=flagship (brand/deal-size). Dental resourced as easy-volume wedge | 03, data-core | flagship flag set; re-seeded | Med |
 | T014 | IN_PROGRESS | Resolve real named POCs (public-web pass). Fortis: 2 named ✅. Apollo/Medanta ops head not public → needs enrichment API / Sales-Nav | 04, data-core/poc | ≥1 named public POC per ★ partner, cited | Med |
@@ -74,7 +75,7 @@ Each task small, verifiable, safe. Status: TODO · IN_PROGRESS · BLOCKED · PAS
 | T007 | TODO | Localization Agent: Arabic transcreation + RTL check | 05, 06 | AR live, native QA passed | Med |
 | T008 | TODO | Lead/CRM: WhatsApp → qualify → route | 05, 07 | test lead flows end-to-end | Med |
 | T009 | TODO | Feeder network: 20 referrers, Tier-A | 04 | list + public contacts + drafted outreach | Med |
-| T010 | TODO | Compliance sweep + evidence log wiring | 08, 10 | 0 uncited claims, gates green | High |
+| T010 | IN_PROGRESS | Compliance sweep + evidence log wiring; treatment-wave editorial and source refinement under review | 08, 10, server/resource_pages.mjs | 0 uncited claims, gates green | High |
 | T011 | TODO | New-market dry run: add a SE Asia market (Myanmar) via config only | 06 | grids derive from config, no code change | Med |
 
 Rule: split any task touching commercials + content + compliance at once. Feeder/hospital outreach and any clinical claim are human-gated.

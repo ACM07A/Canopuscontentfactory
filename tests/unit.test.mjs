@@ -8,6 +8,9 @@ import { DEMO_PASSWORD, authenticateDemoUser, ensureOsSchema, passwordHash, read
 import { apiCase, apiCases, getSession } from "../server/os_pages.mjs";
 import { requiresAppSession, requiresConsoleToken } from "../server/access.mjs";
 import { createSessionToken, sessionCookie, sessionMutationOriginAllowed, verifySessionToken } from "../server/session.mjs";
+import { planProduction, decideFactoryApproval } from "../data-core/factory_core.mjs";
+import { recordGrowthEvent } from "../data-core/measurement.mjs";
+import { prepareFactoryPublish } from "../data-core/factory_publish.mjs";
 
 function seededDb() {
   const dir = mkdtempSync(join(tmpdir(), "medyatra-test-"));
@@ -16,6 +19,22 @@ function seededDb() {
   seedDemoOs(db);
   return { db, dir };
 }
+
+test("growth factory plans channel packages, gates approval, and rejects PII attribution", async () => {
+  const { db, dir } = seededDb();
+  db.exec(`CREATE TABLE growth_experiment (id TEXT PRIMARY KEY, name TEXT, market TEXT, icp TEXT, objective TEXT, channels TEXT, budget TEXT, status TEXT, created_at TEXT, owner TEXT)`);
+  db.prepare("INSERT INTO growth_experiment VALUES (?,?,?,?,?,?,?,?,?,?)").run("exp-test", "Test angle", "Kenya", "Families", "Validate demand", "SEO, Meta, Pinterest, WhatsApp", "100", "Draft", new Date().toISOString(), "Test");
+  const planned = planProduction(db);
+  assert.ok(planned.created >= 1);
+  const pending = db.prepare("SELECT * FROM factory_approval LIMIT 1").get();
+  const blocked = await prepareFactoryPublish(db, pending.asset_id);
+  assert.equal(blocked.error.code, "APPROVAL_REQUIRED");
+  const event = recordGrowthEvent(db, { event_type: "LEAD", experiment_id: "exp-test", channel: "seo", client_id: "anon-1" });
+  assert.equal(event.ok, true);
+  assert.equal(recordGrowthEvent(db, { event_type: "LEAD", properties: { email: "not-allowed@example.com" } }).error.code, "PII_REJECTED");
+  assert.equal(decideFactoryApproval(db, pending.id, "approve", "reviewer").ok, true);
+  db.close(); rmSync(dir, { recursive: true, force: true });
+});
 
 test("demo users use deterministic non-production password hash", () => {
   const { db, dir } = seededDb();

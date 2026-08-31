@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Navbar } from './components/Navbar';
 import { PersistentBanner } from './components/PersistentBanner';
+import { ResourceEngine } from './components/ResourceEngine';
 import { YCLandingPage } from './components/YCLandingPage';
 
 export default function App() {
@@ -15,6 +16,8 @@ export default function App() {
   const openProduct = () => {
     window.location.assign('/demo');
   };
+  const path = window.location.pathname.replace(/\/$/, '') || '/';
+  const isResourceRoute = path === '/resources' || path.startsWith('/resources/') || path === '/treatments' || path.startsWith('/treatments/') || path.startsWith('/partners/');
 
   return (
     <div className={theme === 'dark' ? 'min-h-screen bg-[#070F1E] text-slate-100' : 'min-h-screen bg-[#F7FAF9] text-slate-900'}>
@@ -27,7 +30,7 @@ export default function App() {
           onToggleSandboxMode={openProduct}
         />
       </header>
-      <YCLandingPage theme={theme} onOpenInteractiveDemo={openProduct} />
+      {isResourceRoute ? <ResourceEngine path={path} /> : <YCLandingPage theme={theme} onOpenInteractiveDemo={openProduct} />}
     </div>
   );
 }

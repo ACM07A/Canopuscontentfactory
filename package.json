@@ -21,6 +21,12 @@
     "db:seed": "node --experimental-sqlite data-core/demo_seed.mjs",
     "demo:seed": "node --experimental-sqlite data-core/demo_seed.mjs",
     "demo:reset": "node --experimental-sqlite data-core/reset_demo.mjs",
+    "factory:worker": "node --experimental-sqlite data-core/factory_worker.mjs",
+    "factory:research": "node --experimental-sqlite data-core/research_intel.mjs",
+    "factory:render": "node --experimental-sqlite data-core/factory_render.mjs",
+    "factory:trial": "node --experimental-sqlite data-core/factory_trial.mjs",
+    "factory:sequence": "node --experimental-sqlite data-core/factory_sequence.mjs",
+    "hybrid:web-worker": "node --experimental-sqlite data-core/magnific_web_worker.mjs",
     "db:reset-demo": "node --experimental-sqlite data-core/reset_demo.mjs",
     "db:backup": "node --experimental-sqlite data-core/backup_os.mjs",
     "db:restore-check": "node --experimental-sqlite data-core/verify_restore.mjs",
@@ -31,7 +37,7 @@
     "test:unit": "node --test tests/unit.test.mjs",
     "test:integration": "node --test tests/integration.test.mjs tests/server-auth.test.mjs",
     "test:e2e": "node --test tests/e2e.test.mjs",
-    "lint": "node --check server/server.mjs && node --check server/demo.mjs && node --check server/os_pages.mjs && node --check server/canopus_ui.mjs && node --check server/concierge_bot.mjs && node --check server/session.mjs && node --check server/access.mjs && node --check server/logger.mjs && node --check data-core/os_core.mjs && node --check data-core/case_workflow.mjs && node --check data-core/verify_restore.mjs && node --check scripts/start-app.mjs && node --check scripts/validate-env.mjs",
+    "lint": "node --check server/server.mjs && node --check server/demo.mjs && node --check server/growth_factory.mjs && node --check server/growth_autopilot.mjs && node --check server/os_pages.mjs && node --check server/canopus_ui.mjs && node --check server/concierge_bot.mjs && node --check server/session.mjs && node --check server/access.mjs && node --check server/logger.mjs && node --check data-core/factory_core.mjs && node --check data-core/factory_render.mjs && node --check data-core/factory_publish.mjs && node --check data-core/factory_trial.mjs && node --check data-core/factory_sequence.mjs && node --check data-core/hybrid_factory.mjs && node --check data-core/magnific_web_worker.mjs && node --check data-core/measurement.mjs && node --check data-core/research_intel.mjs && node --check lib/providers/freepik.mjs && node --check lib/video_profiles.mjs && node --check lib/short_templates.mjs && node --check data-core/os_core.mjs && node --check data-core/case_workflow.mjs && node --check data-core/verify_restore.mjs && node --check scripts/start-app.mjs && node --check scripts/validate-env.mjs",
     "typecheck": "tsc --project frontend/tsconfig.json --noEmit && npm run lint",
     "verify": "npm run env:check && npm run lint && npm run test && npm run smoke:hermetic",
     "check": "npm run lint && npm run test",
@@ -73,7 +79,8 @@
     "health-laws": "node --experimental-sqlite data-core/seed_health_data_laws.mjs",
     "doctor-outreach": "node --experimental-sqlite data-core/gen_doctor_outreach.mjs",
     "capture-payer": "node --experimental-sqlite data-core/capture_payer.mjs",
-    "auto-loop": "node --experimental-sqlite data-core/auto_loop.mjs"
+    "auto-loop": "node --experimental-sqlite data-core/auto_loop.mjs",
+    "audit:voice": "node scripts/audit-cofounder-voice.mjs"
   },
   "keywords": [
     "agentic",

@@ -42,6 +42,8 @@ export function Navbar({ theme, onToggleTheme, isInteractiveSandboxMode, onToggl
 
   const landingNavLinks = [
     { name: 'Product', href: '#products' },
+    { name: 'Resources', href: '/resources' },
+    { name: 'Treatments', href: '/treatments' },
     { name: 'Demo', href: '#product-demo' },
     { name: 'Technology', href: '#architecture' },
     { name: 'About Us', href: '#about' },

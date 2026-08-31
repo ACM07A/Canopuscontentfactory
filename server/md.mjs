@@ -13,6 +13,20 @@ export function mdToHtml(md) {
   while (i < lines.length) {
     const l = lines[i];
     if (/^\s*$/.test(l)) { i++; continue; }
+    if (/^```/.test(l)) {
+      i++;
+      let code = "";
+      while (i < lines.length && !/^```/.test(lines[i])) code += lines[i++] + "\n";
+      if (i < lines.length) i++;
+      html += `<pre><code>${esc(code.trimEnd())}</code></pre>`;
+      continue;
+    }
+    if (/^\s*>\s?/.test(l)) {
+      let quote = "";
+      while (i < lines.length && /^\s*>\s?/.test(lines[i])) quote += lines[i++].replace(/^\s*>\s?/, "") + "\n";
+      html += `<blockquote>${mdToHtml(quote.trim())}</blockquote>`;
+      continue;
+    }
     const h = l.match(/^(#{1,6})\s+(.*)/);
     if (h) { const n = h[1].length; html += `<h${n}>${inline(h[2])}</h${n}>`; i++; continue; }
     if (/^---+\s*$/.test(l)) { html += "<hr>"; i++; continue; }

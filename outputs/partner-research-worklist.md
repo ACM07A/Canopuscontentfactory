@@ -93,8 +93,8 @@ _Quality brand (NABH) building MVT (Cardiac, Oncology, Orthopedics) — early en
 - **Inferred email** once you have the name: `first.last@sakraworldhospital.com` (label INFERRED; verify)
 - Capture → `node --experimental-sqlite data-core/capture_poc.mjs sakra-world "First Last" "Head – Intl Patient Services" "first.last@sakraworldhospital.com"`
 
-## SPARSH Hospital (Bengaluru)
-`id: sparsh` · fit **84** · emerging · Bengaluru · email domain `sparsh.com (verify domain)`
+## SPARSH Hospital (Bengaluru)  
+`id: sparsh` · fit **84** · emerging · Bengaluru · email domain `sparsh.com (verify domain)`  
 _Quality brand (NABH) building MVT (Cardiac, Orthopedics) — early enough to win preferred-facilitator terms before the desk matures._
 
 **Searches** (open, read the LinkedIn result):
@@ -105,8 +105,8 @@ _Quality brand (NABH) building MVT (Cardiac, Orthopedics) — early enough to wi
 - **Inferred email** once you have the name: `first.last@sparsh.com (verify domain)` (label INFERRED; verify)
 - Capture → `node --experimental-sqlite data-core/capture_poc.mjs sparsh "First Last" "Head – Intl Patient Services" "first.last@sparsh.com (verify domain)"`
 
-## KIMS Hospital (Bengaluru)
-`id: kims-bangalore` · fit **84** · emerging · Bengaluru · email domain `kims-bangalore.com (verify domain)`
+## KIMS Hospital (Bengaluru)  
+`id: kims-bangalore` · fit **84** · emerging · Bengaluru · email domain `kims-bangalore.com (verify domain)`  
 _Quality brand (NABH) building MVT (Cardiac, Oncology, Orthopedics) — early enough to win preferred-facilitator terms before the desk matures._
 
 **Searches** (open, read the LinkedIn result):
@@ -140,3 +140,4 @@ _Quality brand (NABH) building MVT (Fertility / IVF) — early enough to win pre
 - Google: ["Cloudnine" GM international business](https://www.google.com/search?q=%22Cloudnine%22%20(GM%20OR%20%22general%20manager%22%20OR%20VP)%20international%20business%20hospital)
 - **Inferred email** once you have the name: `first.last@cloudninecare.com` (label INFERRED; verify)
 - Capture → `node --experimental-sqlite data-core/capture_poc.mjs cloudnine "First Last" "Head – Intl Patient Services" "first.last@cloudninecare.com"`
+

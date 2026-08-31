@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import doctorPatientHeroImg from '../assets/images/doctor_patient_clean_1785144762895.jpg';
+import { HomepageResourcesSection } from './ResourceEngine';
 const founderHussainImg = '/landing-assets/hussain.jpg';
 const founderAjeyaImg = '/landing-assets/ajeya.jpg';
 import {
@@ -399,6 +400,7 @@ export function YCLandingPage({ onOpenInteractiveDemo, theme = 'light' }: YCLand
         </div>
       </section>
 
+      <HomepageResourcesSection />
 
       {/* =========================================================================
           SECTION 2: WHO USES CANOPUS CARE? (3 PERSONA COLUMNS)

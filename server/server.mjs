@@ -17,6 +17,11 @@ import { vaultBackend, openVault, accessLog } from "../lib/vault.mjs";
 import { renderStudio, studioQueue, studioApprove } from "./studio.mjs";
 import { renderSandbox, saveTemplate } from "./sandbox.mjs";
 import { renderDemo } from "./demo.mjs";
+import { renderGrowthFactory, growthState, createGrowthExperiment, decideGrowthApproval } from "./growth_factory.mjs";
+import { runGrowthCycle, startGrowthAutopilot } from "./growth_autopilot.mjs";
+import { recordGrowthEvent, measurementState } from "../data-core/measurement.mjs";
+import { prepareFactoryPublish } from "../data-core/factory_publish.mjs";
+import { queueHybridJob, decideHybridJob } from "../data-core/hybrid_factory.mjs";
 import { appMode, authenticateDemoUser, ensureOsSchema, readinessReport, seedDemoOs } from "../data-core/os_core.mjs";
 import { clearSessionCookie, loginRateLimit, sessionCookie, sessionMutationOriginAllowed } from "./session.mjs";
 import { requiresAppSession, requiresConsoleToken } from "./access.mjs";
@@ -30,6 +35,7 @@ import {
   apiCaseResource, apiAgentRuns, apiAudit, apiIntegrations, apiServiceRequests, updateServiceRequest,
 } from "./os_pages.mjs";
 import { renderConciergePage, answerConcierge } from "./concierge_bot.mjs";
+import { getResourceArticlePaths, isResourceArticlePath, renderResourceArticle, resolveResourceRedirect } from "./resource_pages.mjs";
 import { transitionCase } from "../data-core/case_workflow.mjs";
 import {
   renderAgentsDemo, runTriage, runDocumentChecklist,
@@ -154,6 +160,42 @@ const readBody = (req) => new Promise((resolve) => {
   req.on("end", () => { try { resolve(JSON.parse(s || "{}")); } catch { resolve({}); } });
   req.on("error", () => resolve({}));
 });
+const resourceArticlePaths = [
+  "/resources",
+  "/treatments",
+  "/treatments/orthopaedics",
+  "/treatments/cardiac",
+  "/treatments/oncology",
+  "/treatments/transplant",
+  "/treatments/spine-neurosurgery",
+  "/treatments/fertility",
+  "/treatments/urology",
+  "/treatments/bariatric",
+  "/treatments/ophthalmology",
+  ...getResourceArticlePaths(),
+];
+const isResourceRoute = (pathname) => resourceArticlePaths.includes(pathname.replace(/\/$/, "") || "/");
+const countryCode = (country = "") => {
+  const s = String(country).trim().toLowerCase();
+  const aliases = {
+    kenya: "KE", tanzania: "TZ", nigeria: "NG", oman: "OM", uae: "AE",
+    "united arab emirates": "AE", bangladesh: "BD", iraq: "IQ", yemen: "YE",
+    ethiopia: "ET", sudan: "SD", "united kingdom": "GB", uk: "GB",
+  };
+  return aliases[s] || (s.length === 2 ? s.toUpperCase() : null);
+};
+const categoryFromTreatment = (treatment = "", speciality = "") => {
+  const s = `${treatment} ${speciality}`.toLowerCase();
+  if (/cabg|bypass|valve|heart|cardiac/.test(s)) return "cardiac";
+  if (/cancer|oncology|breast|tumou?r|chemo|radiation/.test(s)) return "oncology";
+  if (/knee|hip|joint|ortho/.test(s)) return "ortho";
+  return null;
+};
+const maskHandle = (value = "") => {
+  const digits = String(value).replace(/\D/g, "");
+  if (digits.length < 4) return "unprovided";
+  return `wa-***${digits.slice(-4)}`;
+};
 const resultStatus = (result) => result?.ok ? 200
   : result?.error?.code === "NOT_FOUND" ? 404
     : result?.error?.code === "AUTH_REQUIRED" ? 401
@@ -353,6 +395,45 @@ const server = createServer(async (req, res) => {
       return send(200, "text/html; charset=utf-8", renderStudio(db, { tenant: url.searchParams.get("tenant") || undefined }));
     if (url.pathname === "/api/studio")
       return send(200, "application/json", JSON.stringify(studioQueue(db, { tenant: url.searchParams.get("tenant") || undefined })));
+    // GROWTH FACTORY — strategy-to-experiment operator workspace. External actions remain approval-gated.
+    if (url.pathname === "/api/growth/state")
+      return send(200, "application/json", JSON.stringify({ ok: true, ...growthState(db) }));
+    if (url.pathname === "/api/growth/metrics")
+      return send(200, "application/json", JSON.stringify({ ok: true, ...measurementState(db) }));
+    const growthApprovalAction = url.pathname.match(/^\/api\/growth\/approvals\/([^/]+)\/(approve|reject)$/);
+    if (req.method === "POST" && growthApprovalAction) {
+      const result = decideGrowthApproval(db, growthApprovalAction[1], growthApprovalAction[2], await readBody(req));
+      return send(result.ok ? 200 : 400, "application/json", JSON.stringify(result));
+    }
+    const growthPublish = url.pathname.match(/^\/api\/growth\/publish\/([^/]+)$/);
+    if (req.method === "POST" && growthPublish) {
+      try {
+        const body = await readBody(req);
+        const result = await prepareFactoryPublish(db, growthPublish[1], body);
+        return send(result.ok ? 200 : 400, "application/json", JSON.stringify(result));
+      } catch (error) { return send(400, "application/json", JSON.stringify({ ok: false, error: { code: "PUBLISH_PREP_FAILED", message: String(error.message || error) } })); }
+    }
+    if (req.method === "POST" && url.pathname === "/api/growth/events") {
+      const result = recordGrowthEvent(db, await readBody(req));
+      return send(result.ok ? 200 : 400, "application/json", JSON.stringify(result));
+    }
+    if (req.method === "POST" && url.pathname === "/api/growth/hybrid/jobs")
+      return send(200, "application/json", JSON.stringify(queueHybridJob(db, await readBody(req))));
+    const hybridDecision = url.pathname.match(/^\/api\/growth\/hybrid\/jobs\/([^/]+)\/(approve|reject)$/);
+    if (req.method === "POST" && hybridDecision) {
+      const body = await readBody(req);
+      const result = decideHybridJob(db, hybridDecision[1], hybridDecision[2], body.notes || "");
+      return send(result.ok ? 200 : 400, "application/json", JSON.stringify(result));
+    }
+    if (req.method === "POST" && url.pathname === "/api/growth/run")
+      return send(200, "application/json", JSON.stringify(runGrowthCycle({ reason: "operator" })));
+    if (req.method === "POST" && url.pathname === "/api/growth/experiments") {
+      const body = await readBody(req);
+      const result = createGrowthExperiment(db, body);
+      return send(result.ok ? 200 : 400, "application/json", JSON.stringify(result));
+    }
+    if (url.pathname === "/growth")
+      return send(200, "text/html; charset=utf-8", renderGrowthFactory(db));
     // SANDBOX — the deployment-ready patient-journey walk-through: simulate every branch + edit templates
     // live. Editing a template routes it back to `review` (human-gated before it can ever send).
     if (url.pathname === "/demo")
@@ -447,7 +528,71 @@ const server = createServer(async (req, res) => {
       });
       return send(result.ok ? 200 : /token/.test(result.error || "") ? 401 : 400, "application/json", JSON.stringify({ ...result, mapping: parsed.mapping }));
     }
-    if (url.pathname === "/") {
+    if (req.method === "POST" && url.pathname === "/api/resource-leads") {
+      const body = await readBody(req);
+      const market = countryCode(body.country);
+      const marketOk = market ? db.prepare(`SELECT code FROM market WHERE code=?`).get(market) : null;
+      const category = categoryFromTreatment(body.treatment, body.speciality);
+      const categoryOk = category ? db.prepare(`SELECT id FROM category WHERE id=?`).get(category) : null;
+      if (!body.country || !body.treatment || !body.whatsapp)
+        return send(400, "application/json", JSON.stringify({ ok: false, error: { code: "MISSING_FIELDS", message: "Country, treatment and WhatsApp are required.", details: {} } }));
+      const ref = `resource-${Date.now()}-${maskHandle(body.whatsapp)}-${randomUUID().slice(0, 8)}`;
+      const sourceRef = JSON.stringify({
+        source: "resource",
+        source_url: String(body.source_url || ""),
+        source_page_type: String(body.source_page_type || ""),
+        speciality: String(body.speciality || ""),
+        treatment_slug: String(body.treatment_slug || ""),
+        cta_source: String(body.cta_source || ""),
+        patient_country: String(body.country || ""),
+        whatsapp_handle: maskHandle(body.whatsapp),
+        reports: String(body.has_reports || "unknown"),
+        completion: "step_1",
+      });
+      const result = db.prepare(`INSERT INTO lead
+        (market_code,category_id,channel,ref,urgency,budget_band,docs_ready,consent,status,source_type,source_ref,ingested_at,journey_stage,last_inbound_at)
+        VALUES (?,?,?,?,?,?,?,0,'new','own',?,datetime('now'),'intake',datetime('now'))`)
+        .run(marketOk?.code || null, categoryOk?.id || null, "resource_form", ref, "planning", "unknown", body.has_reports === "yes" ? 1 : 0, sourceRef);
+      logRun(db, "Lead/CRM", "resource lead captured", `${maskHandle(body.whatsapp)} from ${body.country} via ${body.source_url || "resource"}`, "/agent", "pending");
+      return send(200, "application/json", JSON.stringify({ ok: true, lead_id: Number(result.lastInsertRowid), status: "NEW" }));
+    }
+    const resourceLeadComplete = url.pathname.match(/^\/api\/resource-leads\/(\d+)\/complete$/);
+    if (req.method === "POST" && resourceLeadComplete) {
+      const body = await readBody(req);
+      const id = Number(resourceLeadComplete[1]);
+      const existing = db.prepare(`SELECT id,source_ref FROM lead WHERE id=?`).get(id);
+      if (!existing)
+        return send(404, "application/json", JSON.stringify({ ok: false, error: { code: "NOT_FOUND", message: "Lead not found.", details: {} } }));
+      if (!body.consent)
+        return send(400, "application/json", JSON.stringify({ ok: false, error: { code: "CONSENT_REQUIRED", message: "Consent is required before coordinator processing.", details: {} } }));
+      let sourceRef = {};
+      try { sourceRef = JSON.parse(existing.source_ref || "{}"); } catch {}
+      sourceRef = {
+        ...sourceRef,
+        completion: "step_2",
+        first_name_present: !!body.first_name,
+        email_present: !!body.email,
+        preferred_language: String(body.preferred_language || "English"),
+        consented_at: new Date().toISOString(),
+      };
+      db.prepare(`UPDATE lead SET consent=1,status='qualified',source_ref=?,journey_stage='records_pending' WHERE id=?`)
+        .run(JSON.stringify(sourceRef), id);
+      logRun(db, "Lead/CRM", "resource lead consented", `lead ${id} completed intake step 2`, "/agent", "ok");
+      return send(200, "application/json", JSON.stringify({ ok: true, lead_id: id, status: "QUALIFIED" }));
+    }
+    if (url.pathname === "/sitemap.xml") {
+      const origin = `http://${req.headers.host || `localhost:${PORT}`}`;
+      const urls = ["/", ...resourceArticlePaths].map((path) => `<url><loc>${origin}${path}</loc><lastmod>2026-08-10</lastmod></url>`).join("");
+      return send(200, "application/xml; charset=utf-8", `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls}</urlset>`);
+    }
+    if (req.method === "GET" && resolveResourceRedirect(url.pathname)) {
+      return send(308, "text/plain; charset=utf-8", "This guide has moved.", { location: resolveResourceRedirect(url.pathname) });
+    }
+    if (req.method === "GET" && isResourceArticlePath(url.pathname)) {
+      const origin = `http://${req.headers.host || `localhost:${PORT}`}`;
+      return send(200, "text/html; charset=utf-8", renderResourceArticle(url.pathname, ROOT, origin));
+    }
+    if (url.pathname === "/" || isResourceRoute(url.pathname)) {
       return send(200, "text/html; charset=utf-8", readFileSync(join(LANDING, "index.html")));
     }
     if (/^\/landing-assets\/[A-Za-z0-9._-]+$/.test(url.pathname)) {
@@ -578,12 +723,13 @@ ${rows.map(card).join("")}</main></body></html>`;
         docPage("Content Distribution Queue", "REPURPOSED social posts · human-gated (nothing auto-posts)", mdToHtml(body)));
     }
     if (url.pathname.startsWith("/site/") || url.pathname.startsWith("/outputs/screenshots/")
-        || url.pathname.startsWith("/outputs/comms/") || url.pathname.startsWith("/outputs/social/")) {
+        || url.pathname.startsWith("/outputs/comms/") || url.pathname.startsWith("/outputs/social/")
+        || url.pathname.startsWith("/outputs/factory/")) {
       const fp = join(ROOT, url.pathname.replace(/^\//, ""));
       if (!fp.startsWith(ROOT)) return send(403, "text/plain", "forbidden");
       try {
         const ext = fp.split(".").pop().toLowerCase();
-        const ct = { html: "text/html; charset=utf-8", png: "image/png", jpg: "image/jpeg", css: "text/css", js: "text/javascript" }[ext] || "application/octet-stream";
+        const ct = { html: "text/html; charset=utf-8", md: "text/plain; charset=utf-8", svg: "image/svg+xml", png: "image/png", jpg: "image/jpeg", css: "text/css", js: "text/javascript" }[ext] || "application/octet-stream";
         return send(200, ct, readFileSync(fp));
       } catch { return send(404, "text/html", "not built yet — run publish_site.mjs"); }
     }
@@ -693,4 +839,7 @@ ${rows.map(card).join("")}</main></body></html>`;
   }
   finally { db.close(); }
 });
-server.listen(PORT, HOST, () => structuredLog("server_started", { host: HOST, port: PORT, mode: appMode() }));
+server.listen(PORT, HOST, () => {
+  structuredLog("server_started", { host: HOST, port: PORT, mode: appMode() });
+  startGrowthAutopilot();
+});
