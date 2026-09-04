@@ -21,7 +21,9 @@ function writeState(key, value) {
 export function autopilotState(db) {
   const get = (key) => db.prepare("SELECT v FROM system_state WHERE k=?").get(key)?.v || null;
   return {
-    enabled: process.env.GROWTH_AUTOPILOT !== "0",
+    enabled: process.env.GROWTH_AUTOPILOT === "1" && process.env.APP_MODE !== "demo",
+    safeMode: true,
+    outbound: "DISABLED",
     active,
     cadenceHours: Number(process.env.GROWTH_AUTOPILOT_HOURS) || 6,
     lastStarted: get("growth_autopilot_started"),
@@ -39,10 +41,12 @@ export function runGrowthCycle({ reason = "scheduled" } = {}) {
   try {
     execFileSync(process.execPath, ["--experimental-sqlite", join(ROOT, "data-core", "research_intel.mjs")], { cwd: ROOT, stdio: "ignore", env: process.env, windowsHide: true });
     const db = open(); setState(db, "factory_jobs_planned", JSON.stringify(planProduction(db))); renderDraftPackages(db); generateRecommendations(db); db.close();
-    execFileSync(process.execPath, ["--experimental-sqlite", join(ROOT, "data-core", "factory_worker.mjs")], { cwd: ROOT, stdio: "ignore", env: process.env, windowsHide: true });
   } catch (error) { writeState("growth_autopilot_result", `Planning warning: ${String(error.message).slice(0, 120)}`); }
   const child = spawn(process.execPath, ["--experimental-sqlite", LOOP], {
-    cwd: ROOT, env: process.env, stdio: "ignore", windowsHide: true,
+    cwd: ROOT,
+    env: { ...process.env, FACTORY_SAFE_MODE: "1", POST_LIVE: "0" },
+    stdio: "ignore",
+    windowsHide: true,
   });
   child.on("close", (code) => {
     active = false;
@@ -57,7 +61,7 @@ export function runGrowthCycle({ reason = "scheduled" } = {}) {
 }
 
 export function startGrowthAutopilot() {
-  if (process.env.GROWTH_AUTOPILOT === "0" || timer) return;
+  if (process.env.GROWTH_AUTOPILOT !== "1" || process.env.APP_MODE === "demo" || timer) return;
   const hours = Number(process.env.GROWTH_AUTOPILOT_HOURS) || 6;
   timer = setInterval(() => runGrowthCycle({ reason: "scheduled" }), hours * 60 * 60 * 1000);
   timer.unref?.();

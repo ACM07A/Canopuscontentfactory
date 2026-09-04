@@ -582,7 +582,9 @@ const server = createServer(async (req, res) => {
     }
     if (url.pathname === "/sitemap.xml") {
       const origin = `http://${req.headers.host || `localhost:${PORT}`}`;
-      const urls = ["/", ...resourceArticlePaths].map((path) => `<url><loc>${origin}${path}</loc><lastmod>2026-08-10</lastmod></url>`).join("");
+      // Do not emit a fabricated last-modified date. A URL only receives a lastmod once
+      // the content pipeline has a verified source timestamp for that exact page.
+      const urls = ["/", ...resourceArticlePaths].map((path) => `<url><loc>${origin}${path}</loc></url>`).join("");
       return send(200, "application/xml; charset=utf-8", `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls}</urlset>`);
     }
     if (req.method === "GET" && resolveResourceRedirect(url.pathname)) {

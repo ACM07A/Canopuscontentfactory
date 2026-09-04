@@ -21,6 +21,7 @@ const rows = await Promise.all(articles.map(async (article) => {
     indexable: html.includes('name="robots" content="index,follow'),
     internalNavLeak: html.includes(">Demo</a>"),
     scaffoldLeak: scaffoldLeak.test(text),
+    expectedIndexable: Boolean(article.indexReady && article.medicalReviewer && article.reviewedAt && article.contentFingerprint),
   };
 }));
 
@@ -33,10 +34,10 @@ const minimumWords = {
 
 const failures = rows.filter((row) => (
   row.status !== 200
-  || (row.type === "corridor_treatment_candidate" ? row.indexable : !row.indexable)
+  || row.indexable !== row.expectedIndexable
   || row.internalNavLeak
   || row.scaffoldLeak
-  || row.words < minimumWords[row.type]
+  || (row.indexable && row.words < minimumWords[row.type])
 ));
 
 const sorted = [...rows].sort((a, b) => a.words - b.words);

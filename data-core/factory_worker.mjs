@@ -7,7 +7,12 @@ import { createImage, createVideo, status as providerStatus } from "../lib/provi
 loadEnv();
 const db = open();
 const limit = Number(process.env.FACTORY_JOB_BATCH) || 3;
-const jobs = db.prepare("SELECT * FROM production_job WHERE status='READY_FOR_GENERATION' ORDER BY created_at LIMIT ?").all(limit);
+// Provider calls are a spend boundary. Only assets with an explicit human approval record
+// may leave the local queue; the planner/autopilot cannot submit pending drafts.
+const jobs = db.prepare(`SELECT j.* FROM production_job j
+  JOIN channel_asset a ON a.production_job_id=j.id
+  JOIN factory_approval f ON f.asset_id=a.id AND f.status='APPROVED'
+  WHERE j.status='READY_FOR_GENERATION' ORDER BY j.created_at LIMIT ?`).all(limit);
 let submitted = 0;
 for (const job of jobs) {
   const input = JSON.parse(job.input_json || "{}");

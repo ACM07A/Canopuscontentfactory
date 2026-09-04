@@ -1,6 +1,19 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { mdToHtml } from "./md.mjs";
+import { jsonLd } from "../lib/eeat.mjs";
+import { auditPublicContent } from "../lib/content_gate.mjs";
+
+const PAGE_MANIFEST = (() => {
+  try { return JSON.parse(readFileSync(new URL("../docs/content-engine/02_PAGE_MANIFEST.json", import.meta.url), "utf8")); }
+  catch { return { pages: [] }; }
+})();
+const normalizeRoute = (route = "") => String(route).replace(/\/$/, "").replace(/^\/en(?=\/)/, "") || "/";
+const MANIFEST_BY_ROUTE = new Map((PAGE_MANIFEST.pages || []).map((page) => [normalizeRoute(page.route), page]));
+
+function manifestEntry(pathname) {
+  return MANIFEST_BY_ROUTE.get(normalizeRoute(pathname)) || null;
+}
 
 const BASE_ARTICLES = {
   "/treatments/orthopaedics/knee-replacement-india": {
@@ -1649,25 +1662,9 @@ function enhanceHtml(html) {
 }
 
 function publicMarkdown(md) {
-  return md
-    .replace(/^.*\/docs\/content-engine\/09_SOURCE_REGISTER\.md.*(?:\r?\n)?/gim, "")
-    .replace(/^\*\*\d+[\u2013-]\d+ minute resource guide\*\*$/gm, "**Comprehensive patient resource guide**")
-    .replace(/^## Intake questions Canopus should capture$/gm, "## Questions to prepare before requesting estimates")
-    .replace(/^## Intake questions Canopus Care should capture$/gm, "## Questions to prepare before requesting estimates")
-    .replace(/\bCanopus Care should\b/g, "The coordinator should")
-    .replace(/\bCanopus should\b/g, "The coordinator should")
-    .replace(/^## 18–26 minute resource guide$/gm, "## Complete treatment resource guide")
-    .replace(/^## 18-26 minute resource guide$/gm, "## Complete treatment resource guide")
-    .replace(/^Do not publish a universal “fly home on day 7” claim\.$/gm, "Avoid relying on a universal “fly home on day 7” claim. Flight timing should be discussed with the treating team.")
-    .replace(/^Do not publish a universal recommendation between these choices\.$/gm, "There is no universal recommendation between these choices; the right discussion depends on the patient’s anatomy, diagnosis and medical history.")
-    .replace(/^Do not publish a universal age cutoff as a Canopus rule\.$/gm, "There is no universal public age cutoff; the treating valve team should assess age, anatomy, frailty, risk and lifetime strategy.")
-    .replace(/^Do not publish a universal number of chemotherapy cycles\.$/gm, "There is no universal number of chemotherapy cycles; cycle count depends on diagnosis, stage, protocol, tolerance and oncology review.")
-    .replace(/^Do not publish fixed flight or hotel values unless they are current, sourced and time-stamped\.$/gm, "Treat flight and hotel costs as time-sensitive. Check current prices before booking.")
-    .replace(/^Display the real `Last medically reviewed` and `Cost data checked` dates separately\..*$/gm, "Look for separate clinical update and cost-check dates, because medical explanations and commercial estimates can age at different speeds.")
-    .replace(/^Simple flow arrows; avoid diagnostic thresholds unless reviewed\.$/gm, "Use simple pathway diagrams for orientation, and rely on the treating team for diagnostic thresholds.")
-    .replace(/^`Medically reviewed \[date\]`$/gm, "The page should show when clinical content was last reviewed.")
-    .replace(/Each disease-specific article should replace these generic scenarios with its medically reviewed pathway\./g, "Disease-specific plans should be confirmed by the relevant oncology team.")
-    .replace(/\bCanopus\b(?! Care)/gi, "Canopus Care");
+  // Never rewrite editorial instructions into patient language. The gate sees the original
+  // source and holds the page if an internal note is present.
+  return String(md).replace(/<!--[\s\S]*?-->/g, "").trim();
 }
 
 function extractSources(md) {
@@ -2407,6 +2404,11 @@ function htmlPage({ meta, title, description, canonicalPath, html, addon, toc, s
   const tocItems = toc.map((item) => `<a href="#${esc(item.id)}">${esc(item.label)}</a>`).join("");
   const readMinutes = Math.max(20, Math.round(wordCount / 220));
   const displayWordCount = wordCount >= 14900 ? "15,000+ words" : `${wordCount.toLocaleString()} words`;
+  const author = String(meta.author || "Canopus Care editorial team").trim();
+  const reviewer = String(meta.medical_reviewer || "").trim();
+  const reviewedAt = String(meta.reviewed_at || "").trim();
+  const researchDate = String(meta.last_researched || "").trim();
+  const editorialMeta = `<div class="editorial-meta"><strong>Written by ${esc(author)}.</strong> ${researchDate ? `Research checked ${esc(researchDate)}.` : "Research date not recorded."} ${reviewer && reviewedAt ? `Clinically reviewed by ${esc(reviewer)} on ${esc(reviewedAt)}.` : "Clinical review: pending a named reviewer and signed review record."}</div>`;
   const isPartnerPage = meta.category === "Partner";
   const isToolPage = meta.category === "Resource";
   const editorialVisual = meta.category === "Oncology"
@@ -2417,27 +2419,17 @@ function htmlPage({ meta, title, description, canonicalPath, html, addon, toc, s
     : isToolPage
       ? ["A practical step-by-step workflow", "A like-for-like hospital comparison", "Travel and follow-up readiness"]
       : ["Procedure and alternatives explained", "Records and hospital questions", "Recovery, estimate and travel planning"];
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "MedicalWebPage",
-    headline: title,
-    description,
-    inLanguage: "en",
-    isAccessibleForFree: true,
-    dateModified: meta.last_researched || "2026-08-10",
-    publisher: { "@type": "Organization", name: "Canopus Care" },
-    mainEntityOfPage: canonicalPath,
-    citation: sources,
-  };
+  const schema = jsonLd({ title, description, url: canonicalPath, author, reviewedAt: reviewedAt || researchDate, publisher: "Canopus Care", citations: sources });
   return `<!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title.replace(/: .*$/, ""))} | Canopus Care</title>
 <meta name="description" content="${esc(description)}">
 <meta name="keywords" content="${esc(keywords)}">
-<meta name="robots" content="${meta.indexReady === false ? "noindex,nofollow" : "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"}">
+<meta name="robots" content="${meta.indexReady === true ? "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" : "noindex,nofollow"}">
 <link rel="canonical" href="${esc(canonicalPath)}">
 <script type="application/ld+json">${JSON.stringify(schema)}</script>
 <style>
+.editorial-meta{margin:18px 0 0;color:#526273;font-size:12px;line-height:1.6}.editorial-meta strong{color:#0f5f58}
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 :root{--ink:#1e3a44;--heading:#07111f;--muted:#64748b;--navy:#0a1626;--accent:#0fb8a6;--accent2:#0d9488;--line:#d7e1ec;--soft:#f7faf9}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--soft);color:var(--ink);line-height:1.68}a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline}.reading-progress{position:fixed;left:0;right:0;top:0;height:3px;background:transparent;z-index:40}.reading-progress span{display:block;width:0;height:100%;background:var(--accent)}
@@ -2451,7 +2443,7 @@ function htmlPage({ meta, title, description, canonicalPath, html, addon, toc, s
 @media(max-width:900px){.hero-inner,.layout{grid-template-columns:minmax(0,1fr)}.hero-inner{padding:28px 18px}.layout{padding:22px 14px 86px}.side{position:static}.hero h1{font-size:32px}.dek{font-size:16px}.hero-points{grid-template-columns:1fr}.hero-points li{min-height:0}.toc-links,.intent-grid,.quote-grid,.guide-grid,.glossary,.cta-grid,.source-box ol{grid-template-columns:1fr}.checklist{columns:1}.article{font-size:16px}.article h2{font-size:24px}.mobile-bar{display:block}.nav-links{display:none}.brand-text small{display:none}}
 </style></head><body><div class="reading-progress" aria-hidden="true"><span></span></div>
 <header class="top"><div class="nav"><a class="brand" href="/"><span class="brand-mark"></span><span class="brand-text"><strong>Canopus Care</strong><small>Coordinate. Care. Connect.</small></span></a><div class="nav-links"><a href="/resources">Resources</a><a href="/treatments">Treatments</a><a href="#lead-form">Get options</a></div></div></header>
-<section class="hero"><div class="hero-inner"><div><div class="crumb"><a href="/resources">Resources</a> / ${esc(meta.primary_keyword || "Treatment guide")}</div><h1>${esc(title)}</h1><p class="dek">${esc(description)}</p><ul class="hero-points">${heroPoints.map((point) => `<li>${esc(point)}</li>`).join("")}</ul></div><div><div class="rail"><h2>Get current hospital responses</h2><p>Share the minimum details first. Secure report handling happens after consent inside the Canopus case workflow.</p><form id="lead-form"><label class="field">Country<input name="country" required placeholder="Kenya, Oman, Nigeria"></label><label class="field">Treatment or diagnosis<input name="treatment" required value="${esc(meta.primary_keyword || title)}"></label><label class="field">WhatsApp number<input name="whatsapp" required placeholder="+254..."></label><label class="field">Do you have medical reports?<select name="has_reports"><option value="yes">Yes</option><option value="no">No</option></select></label><button class="btn" type="submit">${esc(meta.cta || "Get my case reviewed")}</button><div class="success" id="lead-success">Request received. A coordinator can contact you; hospitals make clinical decisions.</div><div class="fine">Canopus Care is a facilitator, not a hospital. No diagnosis, treatment advice or outcome guarantees.</div></form></div></div></div></section>
+<section class="hero"><div class="hero-inner"><div><div class="crumb"><a href="/resources">Resources</a> / ${esc(meta.primary_keyword || "Treatment guide")}</div><h1>${esc(title)}</h1><p class="dek">${esc(description)}</p>${editorialMeta}<ul class="hero-points">${heroPoints.map((point) => `<li>${esc(point)}</li>`).join("")}</ul></div><div><div class="rail"><h2>Get current hospital responses</h2><p>Share the minimum details first. Secure report handling happens after consent inside the Canopus case workflow.</p><form id="lead-form"><label class="field">Country<input name="country" required placeholder="Kenya, Oman, Nigeria"></label><label class="field">Treatment or diagnosis<input name="treatment" required value="${esc(meta.primary_keyword || title)}"></label><label class="field">WhatsApp number<input name="whatsapp" required placeholder="+254..."></label><label class="field">Do you have medical reports?<select name="has_reports"><option value="yes">Yes</option><option value="no">No</option></select></label><button class="btn" type="submit">${esc(meta.cta || "Get my case reviewed")}</button><div class="success" id="lead-success">Request received. A coordinator can contact you; hospitals make clinical decisions.</div><div class="fine">Canopus Care is a facilitator, not a hospital. No diagnosis, treatment advice or outcome guarantees.</div></form></div></div></div></section>
 <main class="layout"><article class="article">${editorialVisual}<section class="toc"><h2>On this page</h2><div class="toc-links">${tocItems}</div></section>${html}${addon}<section class="source-box"><h2>Medical and planning sources</h2><p>These sources support the clinical orientation and planning framework. Hospital, doctor, device and cost details can change, so ask for a current written response before making travel or payment decisions.</p><ol>${sourceItems}</ol></section></article><aside class="side"><div class="rail"><h2>${esc(meta.cta || "Send reports")}</h2><p>Use the same hospital-ready case packet across hospitals so responses can be compared on procedure, inclusions, exclusions and validity.</p><a class="btn secondary" href="#lead-form">Start case review</a><div class="fine">A coordinator checks completeness first. Hospitals and clinicians make medical decisions.</div></div><div class="trust"><strong>Patient safeguards</strong><div class="fine">Consent before hospital sharing. No public medical-file URLs. No diagnosis, treatment advice or outcome guarantees.</div></div></aside></main>
 <div class="mobile-bar"><div class="bar-inner"><a href="#lead-form">Send reports</a><a href="#lead-form">Talk to coordinator</a></div></div>
 <script>
@@ -3155,15 +3147,27 @@ export function renderResourceArticle(pathname, root, origin = "") {
   const raw = article.generated ? generatedMarkdown(path, article) : readFileSync(join(root, article.file), "utf8");
   const { frontmatter, md: parsedMd } = parseMarkdown(raw);
   const md = publicMarkdown(parsedMd);
-  const title = frontmatter.title || md.match(/^#\s+(.+)$/m)?.[1] || article.description;
-  const toc = buildToc(md);
-  const addon = `${article.type === "corridor_treatment_candidate" ? "" : comprehensiveAddon(path, article)}${coordinationModelHtml()}`;
+  const manifest = manifestEntry(path);
+  const author = frontmatter.author || "Canopus Care editorial team";
+  const reviewer = frontmatter.medical_reviewer || "";
+  const reviewedAt = frontmatter.reviewed_at || "";
+  const visibleEditorialText = `Written by ${author}. ${reviewer && reviewedAt ? `Clinically reviewed by ${reviewer} on ${reviewedAt}.` : "Clinical review pending."} Canopus Care is a facilitator, not a healthcare provider.`;
+  const audit = auditPublicContent(`${md}\n${visibleEditorialText}`, { author, reviewedAt, reviewer, fingerprint: frontmatter.content_fingerprint || "" });
+  const displayMd = audit.internalNotes.length
+    ? "# Editorial review pending\n\nThis guide is temporarily unavailable while editorial instructions are removed and the patient-facing content is reviewed."
+    : md;
+  const title = frontmatter.title || displayMd.match(/^#\s+(.+)$/m)?.[1] || article.description;
+  const toc = buildToc(displayMd);
+  const addon = audit.internalNotes.length ? "" : `${article.type === "corridor_treatment_candidate" ? "" : comprehensiveAddon(path, article)}${coordinationModelHtml()}`;
   const addOnUrls = [...addon.matchAll(/https?:\/\/[^"]+/g)].map((m) => m[0]);
-  const sources = [...new Set([...extractSources(md), ...addOnUrls])].slice(0, 24);
-  const html = enhanceHtml(mdToHtml(md));
-  const wordCount = md.trim().split(/\s+/).filter(Boolean).length + addon.replace(/<[^>]+>/g, " ").trim().split(/\s+/).filter(Boolean).length;
+  const sources = [...new Set([...extractSources(displayMd), ...addOnUrls])].slice(0, 24);
+  const html = enhanceHtml(mdToHtml(displayMd));
+  const wordCount = displayMd.trim().split(/\s+/).filter(Boolean).length + addon.replace(/<[^>]+>/g, " ").trim().split(/\s+/).filter(Boolean).length;
+  const reviewReady = Boolean(reviewer && reviewedAt && frontmatter.content_fingerprint);
+  const manifestRequiresReview = Boolean(manifest?.index_rule && /review|verify|native|corridor/i.test(manifest.index_rule));
+  const indexReady = article.indexReady === true && Boolean(manifest) && reviewReady && audit.publishable && (!manifestRequiresReview || reviewReady);
   return htmlPage({
-    meta: { ...frontmatter, category: article.category, categoryId: article.categoryId, cta: article.cta, indexReady: article.indexReady },
+    meta: { ...frontmatter, category: article.category, categoryId: article.categoryId, cta: article.cta, indexReady, contentAudit: audit, manifestIndexRule: manifest?.index_rule || "route not present in page manifest" },
     title,
     description: article.description,
     canonicalPath: `${origin}${path}`,

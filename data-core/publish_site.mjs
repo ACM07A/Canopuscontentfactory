@@ -5,6 +5,7 @@
 import { open, logRun, marketCleared } from "./db.mjs";
 import { mdToHtml } from "../server/md.mjs";
 import { jsonLd } from "../lib/eeat.mjs";
+import { auditPublicContent } from "../lib/content_gate.mjs";
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join, basename } from "node:path";
@@ -22,7 +23,7 @@ th,td{padding:10px 12px;border-bottom:1px solid #dbe4ef;text-align:left}th{backg
 const esc = (s) => String(s || "").replace(/"/g, "&quot;").replace(/</g, "&lt;");
 // Structured data on every page. Typed as Article, deliberately NOT MedicalWebPage — that type asserts
 // medical authorship we do not have, and mis-declaring it is both a trust risk and a compliance one.
-const page = (title, inner, desc = "", ld = null) => `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title>${desc ? `<meta name="description" content="${esc(desc)}">` : ""}${ld ? `<script type="application/ld+json">${ld}</script>` : ""}<style>${CSS}</style></head><body><div class="ribbon">Canopus Care — LOCAL PREVIEW build · <a href="/site/index.html">all guides</a></div><main>${inner}<p><a class="cta" href="#">Message us on WhatsApp →</a></p></main></body></html>`;
+const page = (title, inner, desc = "", ld = null, indexable = false) => `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title>${desc ? `<meta name="description" content="${esc(desc)}">` : ""}<meta name="robots" content="${indexable ? "index,follow" : "noindex,nofollow"}">${ld ? `<script type="application/ld+json">${ld}</script>` : ""}<style>${CSS}</style></head><body><div class="ribbon">Canopus Care — LOCAL PREVIEW build · <a href="/site/index.html">all guides</a></div><main>${inner}<p><a class="cta" href="#">Message us on WhatsApp →</a></p></main></body></html>`;
 
 const rows = db.prepare(`SELECT ca.*, c.name cat, mk.name mname FROM content_asset ca
   JOIN category c ON c.id=ca.category_id JOIN market mk ON mk.code=ca.market_code
@@ -58,19 +59,28 @@ let gated = 0;
 for (const a of rows) {
   const md = readFileSync(join(ROOT, a.file_ref), "utf8");
   const slug = basename(a.file_ref).replace(/\.md$/, ".html");
+  const audit = auditPublicContent(md, {
+    author: a.author || "Canopus Care editorial",
+    reviewedAt: a.reviewed_at || "",
+    reviewer: a.medical_reviewer || "",
+    fingerprint: a.content_fingerprint || "",
+  });
   // REGULATORY GATE: only mark a page publish-ready if its source market is legally cleared to solicit.
   const reg = marketCleared(db, a.market_code);
   const warn = reg.cleared ? "" : `<div style="background:#d05a5a;color:#fff;padding:8px;text-align:center;font-size:13px;font-weight:700">⚠ ${a.mname}: market NOT regulatory-cleared (${reg.status}) — PREVIEW ONLY, do not deploy live</div>`;
   const ld = jsonLd({ title: a.meta_title || `${a.cat} — ${a.mname}`, description: a.meta_desc || "",
     url: `/site/${slug}`, author: "Canopus Care editorial", reviewedAt: a.reviewed_at,
     citations: ["Vaidam published package pricing", "MediGence published package pricing"] });
-  writeFileSync(join(SITE, slug), warn + page(a.meta_title || `${a.cat} — ${a.mname}`, mdToHtml(md) + relatedHtml(a), a.meta_desc || "", ld));
-  if (reg.cleared) {
+  const contentWarn = audit.publishable ? "" : `<div style="background:#bd7a27;color:#fff;padding:8px;text-align:center;font-size:13px;font-weight:700">CONTENT GATED — editorial, claim, safety or review evidence is incomplete; preview only</div>`;
+  const safeContent = audit.publishable ? mdToHtml(md) + relatedHtml(a) : `<h1>Editorial review pending</h1><p>This draft is withheld while its source, claims and review record are checked.</p>`;
+  const indexable = reg.cleared && audit.publishable;
+  writeFileSync(join(SITE, slug), warn + contentWarn + page(a.meta_title || `${a.cat} — ${a.mname}`, safeContent, a.meta_desc || "", ld, indexable));
+  if (indexable) {
     if (a.status !== "published") db.prepare(`UPDATE content_asset SET status='published' WHERE id=?`).run(a.id);
     logRun(db, "Publisher", `published ${a.category_id}×${a.market_code}`, `local site (market cleared)`, `/site/${slug}`, "ok");
   } else {
     gated++;
-    logRun(db, "Publisher", `GATED ${a.category_id}×${a.market_code}`, `market '${a.market_code}' regulatory ${reg.status} — preview only, not published`, `/site/${slug}`, "pending");
+    logRun(db, "Publisher", `GATED ${a.category_id}×${a.market_code}`, `${reg.cleared ? "content gate failed" : `market '${a.market_code}' regulatory ${reg.status}`} — preview only, not published`, `/site/${slug}`, "pending");
   }
   links.push({ slug, title: `${a.cat} cost in India — ${a.mname}${reg.cleared ? "" : " ⚠"}` });
 }

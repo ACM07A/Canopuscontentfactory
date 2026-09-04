@@ -21,6 +21,7 @@ const rows = getResourceArticlePaths().map((path) => {
   const text = html.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ").replace(/<[^>]+>/g, " ");
   return {
     path,
+    indexable: html.includes('name="robots" content="index,follow'),
     internalLanguage: internalLanguage.test(text),
     sources: (html.match(/<span>Source \d{2}<\/span>/g) || []).length,
     hasPatientLens: html.includes("From the patient side"),
@@ -31,8 +32,8 @@ const rows = getResourceArticlePaths().map((path) => {
 
 const failures = rows.filter((row) => (
   row.internalLanguage
-  || (generatedTreatments.includes(row.path) && (!row.hasPatientLens || !row.hasEvidenceTrail || row.sources < 3))
-  || (row.path.startsWith("/treatments/oncology/") && !row.hasIllustrativeImage)
+  || (row.indexable && generatedTreatments.includes(row.path) && (!row.hasPatientLens || !row.hasEvidenceTrail || row.sources < 3))
+  || (row.indexable && row.path.startsWith("/treatments/oncology/") && !row.hasIllustrativeImage)
 ));
 
 console.log(JSON.stringify({

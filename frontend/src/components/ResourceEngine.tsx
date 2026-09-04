@@ -54,7 +54,7 @@ const specialtyMeta = {
   Partner: { icon: Globe2, tone: 'text-teal-700 bg-teal-50 border-teal-100' },
 } satisfies Record<ResourceArticle['specialty'], { icon: typeof ClipboardCheck; tone: string }>;
 
-function useResourceMetadata(article?: ResourceArticle) {
+function useResourceMetadata(article?: ResourceArticle, noindex = false) {
   useEffect(() => {
     const title = article ? `${article.title} | Canopus Care` : 'Treatment Guides and Resources | Canopus Care';
     const description = article?.summary || 'Canopus Care treatment resources for international patients planning care in India.';
@@ -71,19 +71,22 @@ function useResourceMetadata(article?: ResourceArticle) {
 
     const schemaId = 'canopus-resource-schema';
     document.getElementById(schemaId)?.remove();
+    const robots = document.querySelector('meta[name="robots"]') || document.createElement('meta');
+    robots.setAttribute('name', 'robots');
+    robots.setAttribute('content', article || noindex ? 'noindex,nofollow' : 'index,follow');
+    if (!robots.parentElement) document.head.appendChild(robots);
+
     const schema = document.createElement('script');
     schema.id = schemaId;
     schema.type = 'application/ld+json';
     schema.text = JSON.stringify(article ? {
       '@context': 'https://schema.org',
-      '@type': 'MedicalWebPage',
+      '@type': 'Article',
       headline: article.title,
       description,
-      dateModified: article.updatedAt,
       inLanguage: 'en',
       isAccessibleForFree: true,
       publisher: { '@type': 'Organization', name: 'Canopus Care' },
-      reviewedBy: { '@type': 'Organization', name: 'Canopus Care editorial review' },
       mainEntityOfPage: window.location.href,
       citation: article.sources.map((source) => source.url),
     } : {
@@ -378,8 +381,8 @@ function ArticlePage({ article }: { article: ResourceArticle }) {
             </nav>
             <h1 className="mt-5 max-w-4xl text-4xl font-extrabold tracking-tight text-slate-950 sm:text-5xl">{article.title}</h1>
             <div className="mt-5 flex flex-wrap gap-2 text-xs font-bold text-slate-600">
-              <span className="rounded-full border border-slate-200 bg-white px-3 py-1.5">Editorially reviewed by Canopus Care</span>
-              <span className="rounded-full border border-slate-200 bg-white px-3 py-1.5">Updated {article.updatedAt}</span>
+              <span className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5">Clinical review pending named reviewer</span>
+              <span className="rounded-full border border-slate-200 bg-white px-3 py-1.5">Research date not recorded</span>
               <span className="rounded-full border border-slate-200 bg-white px-3 py-1.5">{article.readTime}</span>
               <span className="rounded-full border border-slate-200 bg-white px-3 py-1.5">{article.sourceCount} source checks</span>
             </div>
@@ -503,9 +506,22 @@ function ArticlePage({ article }: { article: ResourceArticle }) {
   );
 }
 
+function CanonicalResourceFallback({ path }: { path: string }) {
+  useResourceMetadata(undefined, true);
+  return (
+    <main className="min-h-screen bg-white px-4 py-20 text-slate-900 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-2xl rounded-2xl border border-amber-200 bg-amber-50 p-8">
+        <h1 className="text-2xl font-extrabold">This guide is served by the canonical content engine</h1>
+        <p className="mt-3 text-sm leading-7 text-slate-700">The browser app does not keep a second patient-facing copy. Reload the canonical route to receive the current reviewed-status, source and indexing controls.</p>
+        <a className="mt-5 inline-flex rounded-xl bg-[#0B4A8B] px-4 py-3 text-sm font-extrabold text-white" href={path}>Open canonical guide</a>
+      </div>
+    </main>
+  );
+}
+
 export function ResourceEngine({ path }: { path: string }) {
   const article = getArticleByPath(path);
-  if (article) return <ArticlePage article={article} />;
+  if (article) return <CanonicalResourceFallback path={path} />;
   if (path.startsWith('/treatments/orthopaedics')) return <TreatmentDirectory specialty="Orthopaedics" />;
   if (path.startsWith('/treatments/cardiac')) return <TreatmentDirectory specialty="Cardiac" />;
   if (path.startsWith('/treatments/oncology')) return <TreatmentDirectory specialty="Oncology" />;

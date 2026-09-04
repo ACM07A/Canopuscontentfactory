@@ -19,6 +19,8 @@ jobs:
         run: npm ci
       - name: Lint
         run: npm run lint
+      - name: Content lint and governance audit
+        run: npm run lint:content && npm run audit:content
       - name: Environment validation
         run: npm run env:check
         env:
