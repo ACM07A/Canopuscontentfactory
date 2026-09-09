@@ -49,6 +49,7 @@ import { renderJourney, runFullJourney } from "./orchestrate.mjs";
 import { ingestLeads, parseLeadCsv, previewLeadCsv } from "../data-core/ingest.mjs";
 import { benchmarks } from "../data-core/benchmarks.mjs";
 import { range } from "../lib/money.mjs";
+import { renderFactoryOutputs } from "./factory_outputs.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, "..");
@@ -434,6 +435,8 @@ const server = createServer(async (req, res) => {
     }
     if (url.pathname === "/growth")
       return send(200, "text/html; charset=utf-8", renderGrowthFactory(db));
+    if (url.pathname === "/factory")
+      return send(200, "text/html; charset=utf-8", renderFactoryOutputs(ROOT));
     // SANDBOX — the deployment-ready patient-journey walk-through: simulate every branch + edit templates
     // live. Editing a template routes it back to `review` (human-gated before it can ever send).
     if (url.pathname === "/demo")

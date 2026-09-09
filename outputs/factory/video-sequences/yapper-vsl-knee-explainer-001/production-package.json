@@ -1,0 +1,14 @@
+{
+  "id": "yapper-vsl-knee-explainer-001",
+  "status": "PREPRODUCTION_COMPLETE__RENDER_BLOCKED_FOR_SYNCED_AUDIO",
+  "duration_seconds": 60,
+  "storyboard": "storyboard.json",
+  "script": "script.md",
+  "captions_workprint": "captions-workprint.srt",
+  "style_panel": "review.html",
+  "presenter_reference": "presenter-reference.png",
+  "final_video": null,
+  "publish": false,
+  "blocker": "BLOCKED until a native-audio, lip-synchronised model is explicitly allowlisted and its cost policy is confirmed",
+  "next_safe_action": "Select and explicitly allowlist a native-audio/lip-sync video model, then generate each presenter scene from its exact narration."
+}

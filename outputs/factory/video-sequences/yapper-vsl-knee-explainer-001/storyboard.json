@@ -1,0 +1,316 @@
+{
+  "id": "yapper-vsl-knee-explainer-001",
+  "title": "Three questions before a knee-replacement enquiry abroad",
+  "format": {
+    "canvas": "1080x1920",
+    "aspect_ratio": "9:16",
+    "duration_seconds": 60,
+    "fps": 24,
+    "distribution": [
+      "Instagram Reels",
+      "TikTok",
+      "YouTube Shorts"
+    ]
+  },
+  "source_style": "Yapper / VSL-style short informed by publicly described AI-UGC benchmark category; not a pixel-level clone of any third-party video.",
+  "narrator": {
+    "identity": "fictional facilitator educator",
+    "reference_asset": "presenter-reference.png",
+    "prohibited": [
+      "doctor title",
+      "white coat",
+      "credentials",
+      "hospital affiliation"
+    ]
+  },
+  "edit_system": {
+    "hook_window_seconds": 2,
+    "cutaway_ratio_target": "4 of 12 scenes (33%)",
+    "subtitle": {
+      "font": "Arial or Inter Black",
+      "size_px": 56,
+      "color": "#FFF8ED",
+      "outline": "#102536",
+      "outline_px": 5,
+      "highlight": "#72D2C0",
+      "position": "lower-middle with 220px bottom safe margin",
+      "max_lines": 2,
+      "animation": "word-by-word pop only on hook and question numbers"
+    },
+    "grade": "warm natural skin, soft contrast, restrained grain; avoid glossy stock or overly clinical blue",
+    "music": "optional licensed, low-key pulse at -25 LUFS below speech; omit if rights are unresolved"
+  },
+  "approval_gates": {
+    "audio": "BLOCKED until a native-audio, lip-synchronised model is explicitly allowlisted and its cost policy is confirmed",
+    "clinical": "Human medical/compliance review required before publishing",
+    "publishing": "Human approval required; this plan never publishes"
+  },
+  "scenes": [
+    {
+      "id": "S01",
+      "start": 0,
+      "end": 5,
+      "duration": 5,
+      "type": "presenter",
+      "role": "Pattern-break hook",
+      "narration": "Thinking about knee replacement abroad? Start with three questions, not a package.",
+      "caption_text": "Thinking about knee replacement abroad? Start with three questions, not a package.",
+      "caption_layout": "two lines maximum, lower-middle, inside 1080x1920 safe area",
+      "visual_direction": "Lean in on “three questions”; one restrained open-palm gesture.",
+      "production_method": "AUDIO_DRIVEN_PRESENTER",
+      "generation_prompt": "Use the supplied fictional facilitator educator identity exactly: adult South Asian/Indian man, early 40s, salt-and-pepper short hair, trimmed beard, charcoal overshirt over a plain navy crew-neck shirt. Warm modern home office, direct eye-line, natural daylight plus warm practical lamp, waist-up 9:16 creator footage. He is not a clinician: no white coat, badge, stethoscope, hospital logo, or credential claim. One five-second continuous scene. Lean in on “three questions”; one restrained open-palm gesture. Native dialogue must be generated from this exact spoken line, with exact mouth timing: “Thinking about knee replacement abroad? Start with three questions, not a package.”. No burned-in text.",
+      "negative_prompt": "plastic skin, frozen face, teleprompter stare, lip movement without matching audio, robotic gestures, face morphing, text, watermark, logo, hospital branding, white coat, stethoscope, badge, extra fingers, distorted hands, diagnosis, surgery footage, patient data",
+      "asset_status": "UNGENERATED",
+      "qa": [
+        "Native audio and lip motion generated together",
+        "Transcript matches narration exactly",
+        "No clinician identity or credential signal",
+        "Natural hand and face motion"
+      ]
+    },
+    {
+      "id": "S02",
+      "start": 5,
+      "end": 10,
+      "duration": 5,
+      "type": "presenter",
+      "role": "Question one",
+      "narration": "First: what records does the hospital team need before reviewing your case?",
+      "caption_text": "First: what records does the hospital team need before reviewing your case?",
+      "caption_layout": "two lines maximum, lower-middle, inside 1080x1920 safe area",
+      "visual_direction": "Direct eye contact; count “first” on one hand.",
+      "production_method": "AUDIO_DRIVEN_PRESENTER",
+      "generation_prompt": "Use the supplied fictional facilitator educator identity exactly: adult South Asian/Indian man, early 40s, salt-and-pepper short hair, trimmed beard, charcoal overshirt over a plain navy crew-neck shirt. Warm modern home office, direct eye-line, natural daylight plus warm practical lamp, waist-up 9:16 creator footage. He is not a clinician: no white coat, badge, stethoscope, hospital logo, or credential claim. One five-second continuous scene. Direct eye contact; count “first” on one hand. Native dialogue must be generated from this exact spoken line, with exact mouth timing: “First: what records does the hospital team need before reviewing your case?”. No burned-in text.",
+      "negative_prompt": "plastic skin, frozen face, teleprompter stare, lip movement without matching audio, robotic gestures, face morphing, text, watermark, logo, hospital branding, white coat, stethoscope, badge, extra fingers, distorted hands, diagnosis, surgery footage, patient data",
+      "asset_status": "UNGENERATED",
+      "qa": [
+        "Native audio and lip motion generated together",
+        "Transcript matches narration exactly",
+        "No clinician identity or credential signal",
+        "Natural hand and face motion"
+      ]
+    },
+    {
+      "id": "S03",
+      "start": 10,
+      "end": 15,
+      "duration": 5,
+      "type": "broll",
+      "role": "Records cutaway",
+      "narration": "The treating hospital can tell you the exact records it needs for review.",
+      "caption_text": "The treating hospital can tell you the exact records it needs for review.",
+      "caption_layout": "two lines maximum, lower-middle, inside 1080x1920 safe area",
+      "visual_direction": "Overhead desk shot of a blank, unbranded checklist, a closed folder and a generic scan icon; no names, files, or medical images.",
+      "production_method": "SILENT_CUTAWAY",
+      "generation_prompt": "Vertical 9:16 premium natural creator B-roll, five seconds. Overhead desk shot of a blank, unbranded checklist, a closed folder and a generic scan icon; no names, files, or medical images. Gentle handheld micro-motion. No people speaking, no burned-in text, no logo, no watermark.",
+      "negative_prompt": "plastic skin, frozen face, teleprompter stare, lip movement without matching audio, robotic gestures, face morphing, text, watermark, logo, hospital branding, white coat, stethoscope, badge, extra fingers, distorted hands, diagnosis, surgery footage, patient data",
+      "asset_status": "UNGENERATED",
+      "qa": [
+        "No identifying/patient data",
+        "No fabricated price or clinical claim",
+        "No logo or watermark",
+        "Caption copy matches narration exactly"
+      ]
+    },
+    {
+      "id": "S04",
+      "start": 15,
+      "end": 20,
+      "duration": 5,
+      "type": "presenter",
+      "role": "Question two",
+      "narration": "Second: what does the written estimate include, and what is excluded?",
+      "caption_text": "Second: what does the written estimate include, and what is excluded?",
+      "caption_layout": "two lines maximum, lower-middle, inside 1080x1920 safe area",
+      "visual_direction": "Small pause after “Second”; gesture to a simple floating two-column graphic added in edit.",
+      "production_method": "AUDIO_DRIVEN_PRESENTER",
+      "generation_prompt": "Use the supplied fictional facilitator educator identity exactly: adult South Asian/Indian man, early 40s, salt-and-pepper short hair, trimmed beard, charcoal overshirt over a plain navy crew-neck shirt. Warm modern home office, direct eye-line, natural daylight plus warm practical lamp, waist-up 9:16 creator footage. He is not a clinician: no white coat, badge, stethoscope, hospital logo, or credential claim. One five-second continuous scene. Small pause after “Second”; gesture to a simple floating two-column graphic added in edit. Native dialogue must be generated from this exact spoken line, with exact mouth timing: “Second: what does the written estimate include, and what is excluded?”. No burned-in text.",
+      "negative_prompt": "plastic skin, frozen face, teleprompter stare, lip movement without matching audio, robotic gestures, face morphing, text, watermark, logo, hospital branding, white coat, stethoscope, badge, extra fingers, distorted hands, diagnosis, surgery footage, patient data",
+      "asset_status": "UNGENERATED",
+      "qa": [
+        "Native audio and lip motion generated together",
+        "Transcript matches narration exactly",
+        "No clinician identity or credential signal",
+        "Natural hand and face motion"
+      ]
+    },
+    {
+      "id": "S05",
+      "start": 20,
+      "end": 25,
+      "duration": 5,
+      "type": "broll",
+      "role": "Estimate cutaway",
+      "narration": "Ask for the assumptions behind it, then get those answers in writing.",
+      "caption_text": "Ask for the assumptions behind it, then get those answers in writing.",
+      "caption_layout": "two lines maximum, lower-middle, inside 1080x1920 safe area",
+      "visual_direction": "Close-up of an unbranded estimate sheet with abstract line items; all numbers and text deliberately illegible.",
+      "production_method": "SILENT_CUTAWAY",
+      "generation_prompt": "Vertical 9:16 premium natural creator B-roll, five seconds. Close-up of an unbranded estimate sheet with abstract line items; all numbers and text deliberately illegible. Gentle handheld micro-motion. No people speaking, no burned-in text, no logo, no watermark.",
+      "negative_prompt": "plastic skin, frozen face, teleprompter stare, lip movement without matching audio, robotic gestures, face morphing, text, watermark, logo, hospital branding, white coat, stethoscope, badge, extra fingers, distorted hands, diagnosis, surgery footage, patient data",
+      "asset_status": "UNGENERATED",
+      "qa": [
+        "No identifying/patient data",
+        "No fabricated price or clinical claim",
+        "No logo or watermark",
+        "Caption copy matches narration exactly"
+      ]
+    },
+    {
+      "id": "S06",
+      "start": 25,
+      "end": 30,
+      "duration": 5,
+      "type": "presenter",
+      "role": "Question three",
+      "narration": "Third: how will communication work after you return home?",
+      "caption_text": "Third: how will communication work after you return home?",
+      "caption_layout": "two lines maximum, lower-middle, inside 1080x1920 safe area",
+      "visual_direction": "Calm, plain-English question; lean forward slightly.",
+      "production_method": "AUDIO_DRIVEN_PRESENTER",
+      "generation_prompt": "Use the supplied fictional facilitator educator identity exactly: adult South Asian/Indian man, early 40s, salt-and-pepper short hair, trimmed beard, charcoal overshirt over a plain navy crew-neck shirt. Warm modern home office, direct eye-line, natural daylight plus warm practical lamp, waist-up 9:16 creator footage. He is not a clinician: no white coat, badge, stethoscope, hospital logo, or credential claim. One five-second continuous scene. Calm, plain-English question; lean forward slightly. Native dialogue must be generated from this exact spoken line, with exact mouth timing: “Third: how will communication work after you return home?”. No burned-in text.",
+      "negative_prompt": "plastic skin, frozen face, teleprompter stare, lip movement without matching audio, robotic gestures, face morphing, text, watermark, logo, hospital branding, white coat, stethoscope, badge, extra fingers, distorted hands, diagnosis, surgery footage, patient data",
+      "asset_status": "UNGENERATED",
+      "qa": [
+        "Native audio and lip motion generated together",
+        "Transcript matches narration exactly",
+        "No clinician identity or credential signal",
+        "Natural hand and face motion"
+      ]
+    },
+    {
+      "id": "S07",
+      "start": 30,
+      "end": 35,
+      "duration": 5,
+      "type": "broll",
+      "role": "Coordination cutaway",
+      "narration": "Know who coordinates travel logistics, and how questions reach the treating team.",
+      "caption_text": "Know who coordinates travel logistics, and how questions reach the treating team.",
+      "caption_layout": "two lines maximum, lower-middle, inside 1080x1920 safe area",
+      "visual_direction": "Phone calendar, travel folder, and route-map style desk detail. No patient names, messages, or hospital marks.",
+      "production_method": "SILENT_CUTAWAY",
+      "generation_prompt": "Vertical 9:16 premium natural creator B-roll, five seconds. Phone calendar, travel folder, and route-map style desk detail. No patient names, messages, or hospital marks. Gentle handheld micro-motion. No people speaking, no burned-in text, no logo, no watermark.",
+      "negative_prompt": "plastic skin, frozen face, teleprompter stare, lip movement without matching audio, robotic gestures, face morphing, text, watermark, logo, hospital branding, white coat, stethoscope, badge, extra fingers, distorted hands, diagnosis, surgery footage, patient data",
+      "asset_status": "UNGENERATED",
+      "qa": [
+        "No identifying/patient data",
+        "No fabricated price or clinical claim",
+        "No logo or watermark",
+        "Caption copy matches narration exactly"
+      ]
+    },
+    {
+      "id": "S08",
+      "start": 35,
+      "end": 40,
+      "duration": 5,
+      "type": "presenter",
+      "role": "Scope boundary",
+      "narration": "Keep travel arrangements separate from clinical decisions, which stay with qualified hospital teams.",
+      "caption_text": "Keep travel arrangements separate from clinical decisions, which stay with qualified hospital teams.",
+      "caption_layout": "two lines maximum, lower-middle, inside 1080x1920 safe area",
+      "visual_direction": "Slow nod on “hospital teams”; no claim of clinical authority.",
+      "production_method": "AUDIO_DRIVEN_PRESENTER",
+      "generation_prompt": "Use the supplied fictional facilitator educator identity exactly: adult South Asian/Indian man, early 40s, salt-and-pepper short hair, trimmed beard, charcoal overshirt over a plain navy crew-neck shirt. Warm modern home office, direct eye-line, natural daylight plus warm practical lamp, waist-up 9:16 creator footage. He is not a clinician: no white coat, badge, stethoscope, hospital logo, or credential claim. One five-second continuous scene. Slow nod on “hospital teams”; no claim of clinical authority. Native dialogue must be generated from this exact spoken line, with exact mouth timing: “Keep travel arrangements separate from clinical decisions, which stay with qualified hospital teams.”. No burned-in text.",
+      "negative_prompt": "plastic skin, frozen face, teleprompter stare, lip movement without matching audio, robotic gestures, face morphing, text, watermark, logo, hospital branding, white coat, stethoscope, badge, extra fingers, distorted hands, diagnosis, surgery footage, patient data",
+      "asset_status": "UNGENERATED",
+      "qa": [
+        "Native audio and lip motion generated together",
+        "Transcript matches narration exactly",
+        "No clinician identity or credential signal",
+        "Natural hand and face motion"
+      ]
+    },
+    {
+      "id": "S09",
+      "start": 40,
+      "end": 45,
+      "duration": 5,
+      "type": "broll",
+      "role": "Checklist payoff",
+      "narration": "A clear checklist makes unknowns visible before anyone decides anything.",
+      "caption_text": "A clear checklist makes unknowns visible before anyone decides anything.",
+      "caption_layout": "two lines maximum, lower-middle, inside 1080x1920 safe area",
+      "visual_direction": "Hands ticking three blank checkbox lines on an unbranded card. Natural desk shadows, no legible health content.",
+      "production_method": "SILENT_CUTAWAY",
+      "generation_prompt": "Vertical 9:16 premium natural creator B-roll, five seconds. Hands ticking three blank checkbox lines on an unbranded card. Natural desk shadows, no legible health content. Gentle handheld micro-motion. No people speaking, no burned-in text, no logo, no watermark.",
+      "negative_prompt": "plastic skin, frozen face, teleprompter stare, lip movement without matching audio, robotic gestures, face morphing, text, watermark, logo, hospital branding, white coat, stethoscope, badge, extra fingers, distorted hands, diagnosis, surgery footage, patient data",
+      "asset_status": "UNGENERATED",
+      "qa": [
+        "No identifying/patient data",
+        "No fabricated price or clinical claim",
+        "No logo or watermark",
+        "Caption copy matches narration exactly"
+      ]
+    },
+    {
+      "id": "S10",
+      "start": 45,
+      "end": 50,
+      "duration": 5,
+      "type": "presenter",
+      "role": "Facilitator role",
+      "narration": "Canopus Care can help organise questions, records, and verified information.",
+      "caption_text": "Canopus Care can help organise questions, records, and verified information.",
+      "caption_layout": "two lines maximum, lower-middle, inside 1080x1920 safe area",
+      "visual_direction": "Warm, helpful close; keep it conversational, not salesy.",
+      "production_method": "AUDIO_DRIVEN_PRESENTER",
+      "generation_prompt": "Use the supplied fictional facilitator educator identity exactly: adult South Asian/Indian man, early 40s, salt-and-pepper short hair, trimmed beard, charcoal overshirt over a plain navy crew-neck shirt. Warm modern home office, direct eye-line, natural daylight plus warm practical lamp, waist-up 9:16 creator footage. He is not a clinician: no white coat, badge, stethoscope, hospital logo, or credential claim. One five-second continuous scene. Warm, helpful close; keep it conversational, not salesy. Native dialogue must be generated from this exact spoken line, with exact mouth timing: “Canopus Care can help organise questions, records, and verified information.”. No burned-in text.",
+      "negative_prompt": "plastic skin, frozen face, teleprompter stare, lip movement without matching audio, robotic gestures, face morphing, text, watermark, logo, hospital branding, white coat, stethoscope, badge, extra fingers, distorted hands, diagnosis, surgery footage, patient data",
+      "asset_status": "UNGENERATED",
+      "qa": [
+        "Native audio and lip motion generated together",
+        "Transcript matches narration exactly",
+        "No clinician identity or credential signal",
+        "Natural hand and face motion"
+      ]
+    },
+    {
+      "id": "S11",
+      "start": 50,
+      "end": 55,
+      "duration": 5,
+      "type": "presenter",
+      "role": "Save CTA",
+      "narration": "Save this for your first enquiry, and verify every detail with the hospital team.",
+      "caption_text": "Save this for your first enquiry, and verify every detail with the hospital team.",
+      "caption_layout": "two lines maximum, lower-middle, inside 1080x1920 safe area",
+      "visual_direction": "Point subtly toward the lower screen where the editor adds the save icon.",
+      "production_method": "AUDIO_DRIVEN_PRESENTER",
+      "generation_prompt": "Use the supplied fictional facilitator educator identity exactly: adult South Asian/Indian man, early 40s, salt-and-pepper short hair, trimmed beard, charcoal overshirt over a plain navy crew-neck shirt. Warm modern home office, direct eye-line, natural daylight plus warm practical lamp, waist-up 9:16 creator footage. He is not a clinician: no white coat, badge, stethoscope, hospital logo, or credential claim. One five-second continuous scene. Point subtly toward the lower screen where the editor adds the save icon. Native dialogue must be generated from this exact spoken line, with exact mouth timing: “Save this for your first enquiry, and verify every detail with the hospital team.”. No burned-in text.",
+      "negative_prompt": "plastic skin, frozen face, teleprompter stare, lip movement without matching audio, robotic gestures, face morphing, text, watermark, logo, hospital branding, white coat, stethoscope, badge, extra fingers, distorted hands, diagnosis, surgery footage, patient data",
+      "asset_status": "UNGENERATED",
+      "qa": [
+        "Native audio and lip motion generated together",
+        "Transcript matches narration exactly",
+        "No clinician identity or credential signal",
+        "Natural hand and face motion"
+      ]
+    },
+    {
+      "id": "S12",
+      "start": 55,
+      "end": 60,
+      "duration": 5,
+      "type": "slate",
+      "role": "Disclosure",
+      "narration": "General education only. Canopus Care is a facilitator, not a medical provider.",
+      "caption_text": "General education only. Canopus Care is a facilitator, not a medical provider.",
+      "caption_layout": "centre disclosure card",
+      "visual_direction": "Clean end card using brand-neutral dark navy, cream and muted teal. No performance promise or hard sell.",
+      "production_method": "EDITED_SLATE",
+      "generation_prompt": "Vertical 9:16 graphic end card, five seconds. Dark navy background, cream typography, muted-teal accent line, ample safe margins. The editor adds the exact disclosure as readable text. No medical logo, outcome claim, or QR code.",
+      "negative_prompt": "plastic skin, frozen face, teleprompter stare, lip movement without matching audio, robotic gestures, face morphing, text, watermark, logo, hospital branding, white coat, stethoscope, badge, extra fingers, distorted hands, diagnosis, surgery footage, patient data",
+      "asset_status": "UNGENERATED",
+      "qa": [
+        "No identifying/patient data",
+        "No fabricated price or clinical claim",
+        "No logo or watermark",
+        "Caption copy matches narration exactly"
+      ]
+    }
+  ],
+  "publish": false,
+  "fingerprint": "e4795fc90a4297d0279bf5572794685ba8a0328a933c64f2c6fd4c7c88e0aaf9"
+}

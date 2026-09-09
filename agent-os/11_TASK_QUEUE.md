@@ -78,4 +78,6 @@ Each task small, verifiable, safe. Status: TODO · IN_PROGRESS · BLOCKED · PAS
 | T010 | IN_PROGRESS | Compliance sweep + evidence log wiring; treatment-wave editorial and source refinement under review | 08, 10, server/resource_pages.mjs | 0 uncited claims, gates green | High |
 | T011 | TODO | New-market dry run: add a SE Asia market (Myanmar) via config only | 06 | grids derive from config, no code change | Med |
 
+| T116 | IN_PROGRESS | Local reference-video analyst and 50-variant production compiler | agents/video-benchmark, scripts/video-benchmark.mjs, lib/video_benchmark.mjs | real-media extraction, invariant tests, local model readiness | Low |
+
 Rule: split any task touching commercials + content + compliance at once. Feeder/hospital outreach and any clinical claim are human-gated.
