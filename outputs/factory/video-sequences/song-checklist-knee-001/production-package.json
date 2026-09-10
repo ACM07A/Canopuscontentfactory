@@ -1,0 +1,10 @@
+{
+  "id": "song-checklist-knee-001",
+  "status": "FORMAT_REVERSE_ENGINEERED__AUDIO_MASTER_REQUIRED",
+  "source": "https://x.com/qwertyu_alex/status/2097722700634456171?s=20",
+  "storyboard": "storyboard.json",
+  "captions": "captions-workprint.srt",
+  "final_video": null,
+  "publish": false,
+  "render_requirement": "Approve rights-cleared original master audio, then generate/lip-sync each A-roll scene from its exact audio slice."
+}

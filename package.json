@@ -27,6 +27,7 @@
     "factory:benchmark": "node scripts/video-benchmark.mjs",
     "factory:yapper-vsl": "node scripts/create-yapper-vsl-knee-explainer.mjs",
     "factory:decision-escalation": "node scripts/create-decision-escalation-short.mjs",
+    "factory:song-checklist": "node scripts/create-song-checklist-short.mjs",
     "factory:research": "node --experimental-sqlite data-core/research_intel.mjs",
     "factory:render": "node --experimental-sqlite data-core/factory_render.mjs",
     "factory:trial": "node --experimental-sqlite data-core/factory_trial.mjs",
