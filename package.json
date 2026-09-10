@@ -26,6 +26,7 @@
     "lint:content": "node --check server/resource_pages.mjs && node --check server/growth_autopilot.mjs && node --check data-core/run_loop.mjs && node --check data-core/send_outreach.mjs && node --check data-core/factory_worker.mjs && node --check data-core/publish_site.mjs && node --check lib/mailer.mjs && node --check lib/content_gate.mjs && node --check scripts/audit-content-manifest.mjs && node --check tests/content-governance.test.mjs",
     "factory:benchmark": "node scripts/video-benchmark.mjs",
     "factory:yapper-vsl": "node scripts/create-yapper-vsl-knee-explainer.mjs",
+    "factory:decision-escalation": "node scripts/create-decision-escalation-short.mjs",
     "factory:research": "node --experimental-sqlite data-core/research_intel.mjs",
     "factory:render": "node --experimental-sqlite data-core/factory_render.mjs",
     "factory:trial": "node --experimental-sqlite data-core/factory_trial.mjs",

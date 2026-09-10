@@ -1,0 +1,202 @@
+{
+  "id": "decision-escalation-knee-001",
+  "title": "The comparison brief before a knee replacement enquiry abroad",
+  "brand": "MedYatra",
+  "treatment": "knee replacement",
+  "reference": {
+    "source": "https://x.com/CEO_Vlad/status/2097816686665650462?s=20",
+    "observed_format": "second-person escalating-scenario narrative; original execution required"
+  },
+  "format": {
+    "seconds": 49,
+    "scenes": 7,
+    "canvas": "1080x1920",
+    "fps": 24,
+    "channels": [
+      "TikTok",
+      "Instagram Reels",
+      "YouTube Shorts"
+    ]
+  },
+  "pattern": {
+    "hook": "Viewer enters a recognisable decision scenario in the first three seconds.",
+    "escalation": "Four distinct, operational stakes: orientation → record inconsistency → non-comparable information → coordination pressure.",
+    "turn": "A neutral comparison brief enters; it does not promise a clinical, financial, or treatment outcome.",
+    "payoff": "Clarity on which questions belong with hospital teams versus a facilitator.",
+    "testing": "Hold the body constant; test ten hook captions, then setting, then character palette. Review first-3-second hold and the turn at 28 seconds."
+  },
+  "visual_system": {
+    "medium": "original cinematic 3D animation",
+    "palette": {
+      "tension": [
+        "#243041",
+        "#D39B58"
+      ],
+      "resolution": [
+        "#102536",
+        "#72D2C0"
+      ],
+      "type": "#FFF8ED"
+    },
+    "captions": "56px Inter/Arial Black; cream fill, navy outline; max two lines; lower-middle safe area; highlight only “same questions” and “hospital team”.",
+    "audio": "Steady, grounded second-person narrator; quiet pulse rises through S04, drops to warm resolve in S05. Native audio only.",
+    "cuts": "0.8–1.5s internal micro-cuts in S01–S04; 2–3s holds in S05–S07."
+  },
+  "guardrails": [
+    "This is original cinematic 3D scenario animation, not a recreation of a named creator or third-party video.",
+    "No symptom escalation, diagnosis, outcome promise, urgency tactic, price claim, hospital ranking, doctor credential, or patient data.",
+    "MedYatra is depicted only as a facilitator that organises questions and logistics; qualified hospital teams make clinical decisions.",
+    "Every presenter/narration scene requires a native-audio render or verified lip-sync from the same approved audio source. Never overlay detached TTS on a speaking character."
+  ],
+  "scenes": [
+    {
+      "id": "S01",
+      "start": 0,
+      "end": 7,
+      "duration": 7,
+      "phase": "hook",
+      "escalation": "orientation",
+      "narration": "You find three hospitals for knee replacement abroad. Every page looks reassuring.",
+      "caption_text": "You find three hospitals for knee replacement abroad. Every page looks reassuring.",
+      "visual_direction": "A cinematic original 3D overhead of three anonymous hospital cards floating above a calm travel map. Camera drops into the choice from the viewer’s point of view. No hospital names or logos.",
+      "edit_direction": "low-angle push-in; 0–3s hook caption",
+      "generation_prompt": "Original cinematic 3D short-form animation for a medical-travel facilitator. A cinematic original 3D overhead of three anonymous hospital cards floating above a calm travel map. Camera drops into the choice from the viewer’s point of view. No hospital names or logos. Premium stylised realism, tactile materials, controlled depth of field, physically plausible camera motion, restrained dramatic lighting, clean shapes, vertical 9:16, no on-screen text. This is original cinematic 3D scenario animation, not a recreation of a named creator or third-party video. No symptom escalation, diagnosis, outcome promise, urgency tactic, price claim, hospital ranking, doctor credential, or patient data. MedYatra is depicted only as a facilitator that organises questions and logistics; qualified hospital teams make clinical decisions.",
+      "audio_requirement": "native generated narration with the same scene visual, or approved lip-sync using the exact approved voice track",
+      "qa": [
+        "Narration and caption source are identical",
+        "Escalation dimension is distinct from prior beat",
+        "No medical claim or fear tactic",
+        "No generated text relied on for meaning",
+        "No third-party brand/character/style replication"
+      ]
+    },
+    {
+      "id": "S02",
+      "start": 7,
+      "end": 14,
+      "duration": 7,
+      "phase": "escalation",
+      "escalation": "inconsistent-records",
+      "narration": "But each conversation begins with a different question about records.",
+      "caption_text": "But each conversation begins with a different question about records.",
+      "visual_direction": "The three cards open into three differently shaped blank question cards. They drift out of alignment around a generic sealed records folder. No readable medical records.",
+      "edit_direction": "tight close-up; visual uncertainty grows",
+      "generation_prompt": "Original cinematic 3D short-form animation for a medical-travel facilitator. The three cards open into three differently shaped blank question cards. They drift out of alignment around a generic sealed records folder. No readable medical records. Premium stylised realism, tactile materials, controlled depth of field, physically plausible camera motion, restrained dramatic lighting, clean shapes, vertical 9:16, no on-screen text. This is original cinematic 3D scenario animation, not a recreation of a named creator or third-party video. No symptom escalation, diagnosis, outcome promise, urgency tactic, price claim, hospital ranking, doctor credential, or patient data. MedYatra is depicted only as a facilitator that organises questions and logistics; qualified hospital teams make clinical decisions.",
+      "audio_requirement": "native generated narration with the same scene visual, or approved lip-sync using the exact approved voice track",
+      "qa": [
+        "Narration and caption source are identical",
+        "Escalation dimension is distinct from prior beat",
+        "No medical claim or fear tactic",
+        "No generated text relied on for meaning",
+        "No third-party brand/character/style replication"
+      ]
+    },
+    {
+      "id": "S03",
+      "start": 14,
+      "end": 21,
+      "duration": 7,
+      "phase": "escalation",
+      "escalation": "not-comparable",
+      "narration": "Then estimates arrive with different inclusions. It is not a like-for-like decision yet.",
+      "caption_text": "Then estimates arrive with different inclusions. It is not a like-for-like decision yet.",
+      "visual_direction": "Abstract paper tiles with empty line blocks slide across a 3D desk; comparison columns cannot line up. All text and numbers are deliberately illegible.",
+      "edit_direction": "faster lateral cuts; no actual prices",
+      "generation_prompt": "Original cinematic 3D short-form animation for a medical-travel facilitator. Abstract paper tiles with empty line blocks slide across a 3D desk; comparison columns cannot line up. All text and numbers are deliberately illegible. Premium stylised realism, tactile materials, controlled depth of field, physically plausible camera motion, restrained dramatic lighting, clean shapes, vertical 9:16, no on-screen text. This is original cinematic 3D scenario animation, not a recreation of a named creator or third-party video. No symptom escalation, diagnosis, outcome promise, urgency tactic, price claim, hospital ranking, doctor credential, or patient data. MedYatra is depicted only as a facilitator that organises questions and logistics; qualified hospital teams make clinical decisions.",
+      "audio_requirement": "native generated narration with the same scene visual, or approved lip-sync using the exact approved voice track",
+      "qa": [
+        "Narration and caption source are identical",
+        "Escalation dimension is distinct from prior beat",
+        "No medical claim or fear tactic",
+        "No generated text relied on for meaning",
+        "No third-party brand/character/style replication"
+      ]
+    },
+    {
+      "id": "S04",
+      "start": 21,
+      "end": 28,
+      "duration": 7,
+      "phase": "escalation",
+      "escalation": "coordination-pressure",
+      "narration": "Travel dates get closer while the open questions stay scattered.",
+      "caption_text": "Travel dates get closer while the open questions stay scattered.",
+      "visual_direction": "A calm animated calendar, plane route and checkmark tokens orbit separately rather than connect. The environment becomes busier but never alarming.",
+      "edit_direction": "wider orbit; tempo peaks without fear imagery",
+      "generation_prompt": "Original cinematic 3D short-form animation for a medical-travel facilitator. A calm animated calendar, plane route and checkmark tokens orbit separately rather than connect. The environment becomes busier but never alarming. Premium stylised realism, tactile materials, controlled depth of field, physically plausible camera motion, restrained dramatic lighting, clean shapes, vertical 9:16, no on-screen text. This is original cinematic 3D scenario animation, not a recreation of a named creator or third-party video. No symptom escalation, diagnosis, outcome promise, urgency tactic, price claim, hospital ranking, doctor credential, or patient data. MedYatra is depicted only as a facilitator that organises questions and logistics; qualified hospital teams make clinical decisions.",
+      "audio_requirement": "native generated narration with the same scene visual, or approved lip-sync using the exact approved voice track",
+      "qa": [
+        "Narration and caption source are identical",
+        "Escalation dimension is distinct from prior beat",
+        "No medical claim or fear tactic",
+        "No generated text relied on for meaning",
+        "No third-party brand/character/style replication"
+      ]
+    },
+    {
+      "id": "S05",
+      "start": 28,
+      "end": 35,
+      "duration": 7,
+      "phase": "turn",
+      "escalation": "comparison-brief",
+      "narration": "The turn is not choosing faster. It is asking the same questions in one comparison brief.",
+      "caption_text": "The turn is not choosing faster. It is asking the same questions in one comparison brief.",
+      "visual_direction": "Movement pauses. The scattered tokens snap into one clean four-part checklist card: records, written inclusions, coordinator, follow-up questions. The editor supplies labels; do not ask the model to draw text.",
+      "edit_direction": "longer, steadier hold; sound resolves",
+      "generation_prompt": "Original cinematic 3D short-form animation for a medical-travel facilitator. Movement pauses. The scattered tokens snap into one clean four-part checklist card: records, written inclusions, coordinator, follow-up questions. The editor supplies labels; do not ask the model to draw text. Premium stylised realism, tactile materials, controlled depth of field, physically plausible camera motion, restrained dramatic lighting, clean shapes, vertical 9:16, no on-screen text. This is original cinematic 3D scenario animation, not a recreation of a named creator or third-party video. No symptom escalation, diagnosis, outcome promise, urgency tactic, price claim, hospital ranking, doctor credential, or patient data. MedYatra is depicted only as a facilitator that organises questions and logistics; qualified hospital teams make clinical decisions.",
+      "audio_requirement": "native generated narration with the same scene visual, or approved lip-sync using the exact approved voice track",
+      "qa": [
+        "Narration and caption source are identical",
+        "Escalation dimension is distinct from prior beat",
+        "No medical claim or fear tactic",
+        "No generated text relied on for meaning",
+        "No third-party brand/character/style replication"
+      ]
+    },
+    {
+      "id": "S06",
+      "start": 35,
+      "end": 42,
+      "duration": 7,
+      "phase": "payoff",
+      "escalation": "facilitator-boundary",
+      "narration": "Now you can see what needs confirmation by the hospital team, and what a facilitator can coordinate.",
+      "caption_text": "Now you can see what needs confirmation by the hospital team, and what a facilitator can coordinate.",
+      "visual_direction": "The checklist becomes a structured pathway: hospital-team questions on one side; travel and communication coordination on the other. No clinical decision is visualised.",
+      "edit_direction": "calm wider frame; palette shifts from amber tension to teal clarity",
+      "generation_prompt": "Original cinematic 3D short-form animation for a medical-travel facilitator. The checklist becomes a structured pathway: hospital-team questions on one side; travel and communication coordination on the other. No clinical decision is visualised. Premium stylised realism, tactile materials, controlled depth of field, physically plausible camera motion, restrained dramatic lighting, clean shapes, vertical 9:16, no on-screen text. This is original cinematic 3D scenario animation, not a recreation of a named creator or third-party video. No symptom escalation, diagnosis, outcome promise, urgency tactic, price claim, hospital ranking, doctor credential, or patient data. MedYatra is depicted only as a facilitator that organises questions and logistics; qualified hospital teams make clinical decisions.",
+      "audio_requirement": "native generated narration with the same scene visual, or approved lip-sync using the exact approved voice track",
+      "qa": [
+        "Narration and caption source are identical",
+        "Escalation dimension is distinct from prior beat",
+        "No medical claim or fear tactic",
+        "No generated text relied on for meaning",
+        "No third-party brand/character/style replication"
+      ]
+    },
+    {
+      "id": "S07",
+      "start": 42,
+      "end": 49,
+      "duration": 7,
+      "phase": "close",
+      "escalation": "save-cta",
+      "narration": "Start with the questions. Save the checklist. General education only, not medical advice.",
+      "caption_text": "Start with the questions. Save the checklist. General education only, not medical advice.",
+      "visual_direction": "Minimal original 3D end-card: a folded checklist rests beside a passport-like travel document and a teal route line. Brand-neutral/MedYatra-safe label added only in editor.",
+      "edit_direction": "still end hold; readable disclosure",
+      "generation_prompt": "Original cinematic 3D short-form animation for a medical-travel facilitator. Minimal original 3D end-card: a folded checklist rests beside a passport-like travel document and a teal route line. Brand-neutral/MedYatra-safe label added only in editor. Premium stylised realism, tactile materials, controlled depth of field, physically plausible camera motion, restrained dramatic lighting, clean shapes, vertical 9:16, no on-screen text. This is original cinematic 3D scenario animation, not a recreation of a named creator or third-party video. No symptom escalation, diagnosis, outcome promise, urgency tactic, price claim, hospital ranking, doctor credential, or patient data. MedYatra is depicted only as a facilitator that organises questions and logistics; qualified hospital teams make clinical decisions.",
+      "audio_requirement": "native generated narration with the same scene visual, or approved lip-sync using the exact approved voice track",
+      "qa": [
+        "Narration and caption source are identical",
+        "Escalation dimension is distinct from prior beat",
+        "No medical claim or fear tactic",
+        "No generated text relied on for meaning",
+        "No third-party brand/character/style replication"
+      ]
+    }
+  ],
+  "publish": false,
+  "fingerprint": "0086e72a16cb98a716a5f54fe1af47c68af70b5e8dabcf0f45980914f82bef30"
+}

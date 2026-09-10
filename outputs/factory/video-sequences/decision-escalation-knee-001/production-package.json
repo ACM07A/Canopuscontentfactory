@@ -1,0 +1,10 @@
+{
+  "id": "decision-escalation-knee-001",
+  "status": "FORMAT_REVERSE_ENGINEERED__AWAITING_NATIVE_AUDIO_WEB_RENDER",
+  "source": "https://x.com/CEO_Vlad/status/2097816686665650462?s=20",
+  "storyboard": "storyboard.json",
+  "captions": "captions-workprint.srt",
+  "final_video": null,
+  "publish": false,
+  "render_requirement": "Every presenter/narration scene requires a native-audio render or verified lip-sync from the same approved audio source. Never overlay detached TTS on a speaking character."
+}
